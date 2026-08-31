@@ -18,81 +18,81 @@
   // Strong models for the primary agents
   "agent": {
     "build": {
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "opencode-go/glm-5.3-flash",
       "variant": "max",
     },
 
     "plan": {
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "opencode-go/glm-5.3-flash",
       "variant": "max",
     },
 
     "orchestrator": {
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "opencode-go/glm-5.3-flash",
       "temperature": 0.2,
       "variant": "max",
     },
 
     "plan-runner": {
-      // stick with pro here aswell if you accept the speed vs quality tradeoff
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      // stick with qwen3.8-flash here aswell if you accept the thinking tradeoff
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.2,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     // Cheap model for subagents (defined in agents/<id>.md)
     "code-explorer": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.2,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "code-executor": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.1,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "test-verifier": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.1,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "spec-critic": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.4,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "security-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.1,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "docs-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.1,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "code-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.1,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "api-docs-researcher": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.1,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "host-security-investigator": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.1,
-      "variant": "max",
+      "variant": "xhigh",
     },
   },
 }

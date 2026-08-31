@@ -1,15 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "@mohak34/opencode-notifier@latest",
-    // plan-post-approval is loaded explicitly with its options here (not auto-discovered),
-    // so the handoff knob never reaches a provider request body (fixes GLM/Vertex/Fireworks
-    // "Extra inputs are not permitted" errors).
-    [
-      "./plugin-src/plan-post-approval.ts",
-      { "plan_post_approval_handoff_agent": "orchestrator" },
-    ],
-  ],
 
   "provider": {},
 
@@ -44,65 +34,65 @@
     },
 
     "plan-runner": {
-      // stick with qwen3.8-flash here aswell if you accept the thinking tradeoff
-      "model": "opencode-go/qwen3.8-flash",
+      // stick with glm-5.3-flash here aswell if you accept the thinking tradeoff
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.2,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     // Cheap model for subagents (defined in agents/<id>.md)
     "code-explorer": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.2,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     "code-executor": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.1,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     "test-verifier": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.1,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     "spec-critic": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.4,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     "security-reviewer": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.1,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     "docs-reviewer": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.1,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     "code-reviewer": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.1,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     "api-docs-researcher": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.1,
-      "variant": "xhigh",
+      "variant": "max",
     },
 
     "host-security-investigator": {
-      "model": "opencode-go/qwen3.8-flash",
+      "model": "opencode-go/deepseek-v4-flash",
       "temperature": 0.1,
-      "variant": "xhigh",
+      "variant": "max",
     },
   },
 }

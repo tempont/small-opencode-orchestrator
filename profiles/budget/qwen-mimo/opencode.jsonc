@@ -18,81 +18,71 @@
   // Strong models for the primary agents
   "agent": {
     "build": {
-      "model": "opencode-go/deepseek-v4-pro",
-      "variant": "max",
+      "model": "opencode-go/qwen3.8-flash",
+      "variant": "xhigh",
     },
 
     "plan": {
-      "model": "opencode-go/deepseek-v4-pro",
-      "variant": "max",
+      "model": "opencode-go/qwen3.8-flash",
+      "variant": "xhigh",
     },
 
     "orchestrator": {
-      "model": "opencode-go/deepseek-v4-pro",
+      "model": "opencode-go/qwen3.8-flash",
       "temperature": 0.2,
-      "variant": "max",
+      "variant": "xhigh",
     },
 
     "plan-runner": {
-      // stick with pro here aswell if you accept the speed vs quality tradeoff
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      // stick with mimo-v2.5 here aswell if you accept the thinking tradeoff
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.2,
-      "variant": "max",
     },
 
     // Cheap model for subagents (defined in agents/<id>.md)
     "code-explorer": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.2,
-      "variant": "max",
     },
 
     "code-executor": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.1,
-      "variant": "max",
     },
 
     "test-verifier": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.1,
-      "variant": "max",
     },
 
     "spec-critic": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.4,
-      "variant": "max",
     },
 
     "security-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.1,
-      "variant": "max",
     },
 
     "docs-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.1,
-      "variant": "max",
     },
 
     "code-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.1,
-      "variant": "max",
     },
 
     "api-docs-researcher": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.1,
-      "variant": "max",
     },
 
     "host-security-investigator": {
-      "model": "opencode-go/deepseek-v4-flash-vision-exp",
+      "model": "opencode-go/mimo-v2.5",
       "temperature": 0.1,
-      "variant": "max",
     },
   },
 }
