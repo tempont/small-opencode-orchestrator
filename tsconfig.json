@@ -9,7 +9,8 @@
     "types": ["node"]
   },
   "include": [
-    "skills/**/*.ts"
+    "skills/**/*.ts",
+    "plugin-src/**/*.ts"
   ],
   "exclude": [
     "node_modules"

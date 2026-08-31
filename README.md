@@ -55,6 +55,67 @@ For non-trivial tasks, the workflow typically follows this pattern:
 
 This keeps the main agent focused on coordination instead of forcing one large prompt/session to handle every phase of the task.
 
+## Playing with profiles
+
+Slowly adding new opencode.jsonc files to `profiles/*` that can be used to quick explore different models
+and combinations of agents. Simply use the default `opencode.jsonc` if you don't want to test anything.
+
+You can select a profile by using OpenCode's `OPENCODE_CONFIG` environment variable, that makes it super easy:
+
+Currently available test profiles:
+
+| Profile | Configuration | Models |
+|---------|---------------|--------|
+| Default             | `opencode.jsonc`                          | Deepseek V4 Pro / Flash
+| Budget / DeepSeek Vision | `profiles/budget/deepseek-vision/opencode.jsonc` | Deepseek V4 Pro / Deepseek V4 Flash Vision Exp |
+| Budget / GLM + Qwen | `profiles/budget/glm-qwen/opencode.jsonc` | GLM-5.3 / Qwen3.8
+
+Replace `<profile>` below with the desired profile path, for example `budget/glm-qwen`.
+
+### Bash / Zsh
+
+Current session:
+
+```sh
+export OPENCODE_CONFIG="$HOME/.config/opencode/profiles/<profile>/opencode.jsonc"
+```
+
+For persistent use, add the same `export` command to `~/.bashrc` or `~/.zshrc`.
+
+### PowerShell
+
+Current session:
+
+```powershell
+$env:OPENCODE_CONFIG = "$HOME\.config\opencode\profiles\<profile>\opencode.jsonc"
+```
+
+Persistent:
+
+```powershell
+[Environment]::SetEnvironmentVariable(
+    "OPENCODE_CONFIG",
+    "$HOME\.config\opencode\profiles\<profile>\opencode.jsonc",
+    "User"
+)
+```
+
+> These examples assume the repository is installed at `~/.config/opencode`. Adjust the base path if you installed it elsewhere.
+
+### Fish
+
+Current session:
+
+```fish
+set -x OPENCODE_CONFIG "$HOME/.config/opencode/profiles/<profile>/opencode.jsonc"
+```
+
+Persistent:
+
+```fish
+set -Ux OPENCODE_CONFIG "$HOME/.config/opencode/profiles/<profile>/opencode.jsonc"
+```
+
 ## Structure
 
 ```text
