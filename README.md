@@ -40,6 +40,56 @@ It aims to:
 - Provide a useful starting point for customizing OpenCode workflows
 - Sync the improvements with my own personal workflow.
 
+## Structure
+
+```
+├── 📁 agents
+│   ├── 📝 api-docs-researcher.md
+│   ├── 📝 code-executor.md
+│   ├── 📝 code-explorer.md
+│   ├── 📝 code-reviewer.md
+│   ├── 📝 docs-reviewer.md
+│   ├── 📝 host-security-investigator.md
+│   ├── 📝 orchestrator.md
+│   ├── 📝 plan-runner.md
+│   ├── 📝 security-reviewer.md
+│   ├── 📝 spec-critic.md
+│   └── 📝 test-verifier.md
+├── 📁 plugin-src
+│   └── 📄 plan-post-approval.ts
+├── 📁 profiles
+│   ├── 📁 balanced
+│   │   └── 📁 glm-qwen
+│   │       └── 📄 opencode.jsonc
+│   └── 📁 budget
+│       ├── 📁 deepseek-vision
+│       │   └── 📄 opencode.jsonc
+│       ├── 📁 glm-deepseek
+│       │   └── 📄 opencode.jsonc
+│       └── 📁 qwen-mimo
+│           └── 📄 opencode.jsonc
+├── 📁 skills
+│   ├── 📁 agent-delegation
+│   │   └── 📝 SKILL.md
+│   ├── 📁 pythonic-quality
+│   │   └── 📝 SKILL.md
+│   ├── 📁 skill-creator
+│   └── 📁 task-management
+│       ├── 📁 scripts
+│       │   ├── 📄 migrate-schema.ts
+│       │   └── 📄 task-cli.ts
+│       ├── 📝 SKILL.md
+│       └── 📄 router.sh
+├── ⚙️ .gitignore
+├── 📝 AGENTS.md
+├── 📄 LICENSE
+├── 📝 README.md
+├── 📄 opencode.jsonc
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+└── ⚙️ tsconfig.json
+```
+
 ## How the workflow works
 
 The default entry point is the `orchestrator` agent.
@@ -55,10 +105,42 @@ For non-trivial tasks, the workflow typically follows this pattern:
 
 This keeps the main agent focused on coordination instead of forcing one large prompt/session to handle every phase of the task.
 
+## Agents
+
+### Primary agents (Strong models) - Currently Using DeepSeek V4 Pro/GLM 5.3 Flash
+
+- **orchestrator** - Coordinates multi-phase work through plan files, approval gates, and implementation slices
+- **build** - OpenCode Default Agent (Best for simple tasks)
+- **plan** - OpenCode Default Agent  (Best for simple tasks)
+
+### Subagents (Cheap models) - Currently Using DeepSeek V4 Flash/Qwen3.8 Flash
+
+- **plan-runner** - Drafts implementation plans under `.opencode/plans/`
+- **code-executor** - Implements scoped coding tasks with minimal diffs
+- **test-verifier** - Validates changes through tests, linting, and type checking
+- **code-reviewer** - Reviews diffs for correctness, maintainability, and implementation risk
+- **docs-reviewer** - Checks whether documentation needs to be updated
+- **security-reviewer** - Identifies security risks in application code
+- **spec-critic** - Challenges plans before coding starts
+- **api-docs-researcher** - Researches external API documentation
+- **host-security-investigator** - Assesses hosting and infrastructure security concerns
+
+## When to use this
+
+This configuration is useful when you want:
+
+- More structure than a single-agent coding workflow
+- Planning before implementation
+- Smaller, easier-to-review diffs
+- Separate review passes for tests, docs, code quality, and security
+- A multi-agent setup that is still simple enough to understand and modify
+
+It may be unnecessary for very small edits where a direct `build` agent is faster and cheaper.
+
 ## Playing with profiles
 
 Slowly adding new opencode.jsonc files to `profiles/*` that can be used to quick explore different models
-and combinations of agents. Simply use the default `opencode.jsonc` if you don't want to test anything.
+and combinations of agents. Simply use the default `opencode.jsonc` if you don't want to test anything. Profiles are merged additively on top of the global config, so plugins and permissions are inherited from `opencode.jsonc` — profile files only need to override models and variants.
 
 You can select a profile by using OpenCode's `OPENCODE_CONFIG` environment variable, that makes it super easy:
 
@@ -115,101 +197,6 @@ Persistent:
 ```fish
 set -Ux OPENCODE_CONFIG "$HOME/.config/opencode/profiles/<profile>/opencode.jsonc"
 ```
-
-## Structure
-
-```text
-├── 📁 agents                                      # Agent definitions
-│   ├── 📝 api-docs-researcher.md
-│   ├── 📝 code-executor.md                        # Implementation subagent        
-│   ├── 📝 code-explorer.md                        # Read-only subagent
-│   ├── 📝 code-reviewer.md                         
-│   ├── 📝 docs-reviewer.md
-│   ├── 📝 host-security-investigator.md           
-│   ├── 📝 orchestrator.md                         # Workflow coordinator (No writting. Only analysis, context managment and delegation to subagents)
-│   ├── 📝 plan-runner.md                          # Plan drafting subagent apart from opencode Plan default agent, so we don't mess with that.
-│   ├── 📝 security-reviewer.md                    
-│   ├── 📝 spec-critic.md
-│   └── 📝 test-verifier.md
-├── 📁 command                                     # Optional OpenCode command hooks (may be empty)  
-├── 📁 plugin-src
-│   └── 📄 plan-post-approval.ts
-├── 📁 skills
-│   ├── 📁 agent-delegation
-│   │   └── 📝 SKILL.md
-│   ├── 📁 context7
-│   │   ├── 📝 README.md
-│   │   ├── 📝 SKILL.md
-│   │   ├── 📝 library-registry.md
-│   │   └── 📝 navigation.md
-│   ├── 📁 pythonic-quality
-│   │   └── 📝 SKILL.md
-│   ├── 📁 security-investigation
-│   │   ├── 📁 references
-│   │   │   └── 📝 vps-checklist.md
-│   │   ├── 📁 scripts
-│   │   │   └── 📄 vps-security-scan.sh
-│   │   └── 📝 SKILL.md
-│   ├── 📁 skill-creator
-│   │   ├── 📁 references
-│   │   │   ├── 📝 output-patterns.md
-│   │   │   └── 📝 workflows.md
-│   │   ├── 📁 scripts
-│   │   │   ├── 🐍 init_skill.py
-│   │   │   ├── 🐍 package_skill.py
-│   │   │   └── 🐍 quick_validate.py
-│   │   ├── 📄 LICENSE.txt
-│   │   └── 📝 SKILL.md
-│   └── 📁 task-management
-│       ├── 📁 scripts
-│       │   ├── 📄 migrate-schema.ts
-│       │   └── 📄 task-cli.ts
-│       ├── 📝 SKILL.md
-│       └── 📄 router.sh
-├── ⚙️ .gitignore
-├── 📝 AGENTS.md                                   # Global agent rules and delegation guidelines
-├── 📄 LICENSE
-├── 📝 README.md
-├── 📄 opencode.jsonc                              # Main OpenCode configuration
-├── ⚙️ package-lock.json
-├── ⚙️ package.json                                # Plugin / tooling dependencies
-├── ⚙️ tsconfig.json                               # Typescript configuration          
-└── ⚙️ tui.json                                    # TUI settings (if used)
-```
-
-**Local-only skills (not tracked; see `.gitignore`):** add `skills/context7/` or `skills/gitnexus-*` on your machine if you use those toolchains. Agent configs may still reference `gitnexus-*` in skill permissions.
-
-## Agents
-
-### Primary agents (Strong models) - Currently Using DeepSeek V4 Pro/GLM 5.2
-
-- **orchestrator** - Coordinates multi-phase work through plan files, approval gates, and implementation slices
-- **build** - OpenCode Default Agent (Best for simple tasks)
-- **plan** - OpenCode Default Agent  (Best for simple tasks)
-
-### Subagents (Cheap models) - Currently Using DeepSeek V4 Flash
-
-- **plan-runner** - Drafts implementation plans under `.opencode/plans/`
-- **code-executor** - Implements scoped coding tasks with minimal diffs
-- **test-verifier** - Validates changes through tests, linting, and type checking
-- **code-reviewer** - Reviews diffs for correctness, maintainability, and implementation risk
-- **docs-reviewer** - Checks whether documentation needs to be updated
-- **security-reviewer** - Identifies security risks in application code
-- **spec-critic** - Challenges plans before coding starts
-- **api-docs-researcher** - Researches external API documentation
-- **host-security-investigator** - Assesses hosting and infrastructure security concerns
-
-## When to use this
-
-This configuration is useful when you want:
-
-- More structure than a single-agent coding workflow
-- Planning before implementation
-- Smaller, easier-to-review diffs
-- Separate review passes for tests, docs, code quality, and security
-- A multi-agent setup that is still simple enough to understand and modify
-
-It may be unnecessary for very small edits where a direct `build` agent is faster and cheaper.
 
 ## Plugins
 
@@ -280,11 +267,25 @@ Key settings in `opencode.jsonc`:
 - **`default_agent: "orchestrator"`** - Sets the orchestrator as the default entry point
 - **`permission`** - Provides a minimal deny-by-default workspace baseline; each agent declares its tool policy in `agents/<id>.md` frontmatter
 - **`agent.*.model`** - Configures model selection for primary agents and selected subagents
-- **`reasoningEffort`**, **`textVerbosity`**, and **`temperature`** - Tune agent behavior where needed
+- **`agent.*.variant`** - Per-agent thinking variant (e.g. `"max"`); **`temperature`** - Tune agent behavior where needed
 - **`plugin` tuple option `plan_post_approval_handoff_agent`** (for `./plugin-src/plan-post-approval.ts`) - Controls post-approval routing for the plan handoff plugin. Kept out of `agent.orchestrator` so strict providers (GLM, Vertex, Fireworks) don't reject it as an extra request field.
 
 
 ## Changelog
+
+### [1.1.4] - 2026-08-31
+
+- **Added**
+  - `profiles/budget/deepseek-vision/` profile (Deepseek V4 Pro primaries / Deepseek V4 Flash Vision Exp subagents).
+  - `small_model` pin (`opencode-go/deepseek-v4-flash`) in `opencode.jsonc`.
+  - `profiles/budget/qwen-mimo/` profile (Qwen3.8 Flash `xhigh` primaries / MiMo V2.5 subagents, no variants).
+  - `profiles/budget/glm-deepseek/` profile (GLM 5.3 Flash `max` primaries / DeepSeek V4 Flash `max` subagents).
+- **Changed**
+  - Global provider `reasoningEffort` block replaced by per-agent `variant: "max"` entries in `opencode.jsonc`.
+  - `@opencode-ai/plugin` aligned to 1.14.20; `tsconfig.json` now type-checks `plugin-src/`.
+- **Fixed**
+  - `profiles/budget/glm-qwen/`: `"variant:"` key typo and stale model comment.
+  - Profiles no longer redeclare the `plugin` array — plugins are inherited from the global config, fixing the relative `plugin-src/` path from profile directories.
 
 ### [1.1.3] - 2026-06-21
 
