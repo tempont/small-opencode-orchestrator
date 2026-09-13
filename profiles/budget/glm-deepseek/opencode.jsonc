@@ -35,62 +35,62 @@
 
     "plan-runner": {
       // stick with glm-5.3-flash here aswell if you accept the thinking tradeoff
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.2,
       "variant": "max",
     },
 
     // Cheap model for subagents (defined in agents/<id>.md)
     "code-explorer": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.2,
       "variant": "max",
     },
 
     "code-executor": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.1,
       "variant": "max",
     },
 
     "test-verifier": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.1,
       "variant": "max",
     },
 
     "spec-critic": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.4,
       "variant": "max",
     },
 
     "security-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.1,
       "variant": "max",
     },
 
     "docs-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.1,
       "variant": "max",
     },
 
     "code-reviewer": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.1,
       "variant": "max",
     },
 
     "api-docs-researcher": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.1,
       "variant": "max",
     },
 
     "host-security-investigator": {
-      "model": "opencode-go/deepseek-v4-flash",
+      "model": "opencode-go/deepseek-v4.1-flash",
       "temperature": 0.1,
       "variant": "max",
     },
