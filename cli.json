@@ -1,0 +1,24 @@
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "attention": {
+    "notifications": true,
+    "sound": false
+  },
+  "theme": {
+    "name": "vesper"
+  },
+  "keybinds": {
+    "command.palette.show": "<leader>p",
+    "input.submit": "enter",
+    "input.newline": "shift+enter"
+  },
+  "diffs": {
+    "wrap": "word"
+  },
+  "session": {
+    "sidebar": "auto",
+    "scrollbar": false,
+    "thinking": "hide"
+  },
+  "animations": true
+}

@@ -12,9 +12,6 @@ __pycache__*
 .env.*
 !.env.example
 
-# Runtime state
-opencode-notifier-state.json
-
 # Logs
 *.log
 npm-debug.log*

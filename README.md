@@ -82,6 +82,7 @@ It aims to:
 │       └── 📄 router.sh
 ├── ⚙️ .gitignore
 ├── 📝 AGENTS.md
+├── ⚙️ cli.json
 ├── 📄 LICENSE
 ├── 📝 README.md
 ├── 📄 opencode.jsonc
@@ -270,8 +271,18 @@ Key settings in `opencode.jsonc`:
 - **`agent.*.variant`** - Per-agent thinking variant (e.g. `"max"`); **`temperature`** - Tune agent behavior where needed
 - **`plugin` tuple option `plan_post_approval_handoff_agent`** (for `./plugin-src/plan-post-approval.ts`) - Controls post-approval routing for the plan handoff plugin. Kept out of `agent.orchestrator` so strict providers (GLM, Vertex, Fireworks) don't reject it as an extra request field.
 
+CLI-only settings (theme, keybinds, diffs, session view, animations, and `attention` alerts) live in the separate `cli.json` and are not read from `opencode.jsonc`.
+
 
 ## Changelog
+
+### [1.1.5] - 2026-09-28
+
+- **Added**
+  - `cli.json` (OpenCode v2 CLI settings file): `vesper` theme, keybinds (`<leader>p` command palette, `enter` submit, `shift+enter` newline), word-wrapped diffs, session sidebar/scrollbar/thinking preferences, and animations.
+  - Native `attention.notifications` alert in `cli.json`, replacing the notifier plugin with OpenCode's built-in system notifications.
+- **Removed**
+  - `@mohak34/opencode-notifier` plugin from the `plugin` array in `opencode.jsonc`. Notification duty now belongs to the native `attention` alerts in `cli.json` (OpenCode v2); the stale `opencode-notifier-state.json` entry was dropped from `.gitignore`.
 
 ### [1.1.4] - 2026-08-31
 
