@@ -1,98 +1,33 @@
 {
   "$schema": "https://opencode.ai/config.json",
 
-  "provider": {},
-
   "default_agent": "orchestrator",
   "share": "manual",
-  "autoupdate": true,
+  "update": "auto",
 
   // Minimal workspace baseline; per-agent tool policy lives in agents/<id>.md frontmatter. If you want it more permissive you can copy to your project workspace ./opencode/opencode.jsonc with "allow" instead
-  "permission": {
-    "bash": {
-      "*": "ask",
-    },
-    "edit": "ask",
-  },
+  "permissions": [
+    { "action": "shell", "resource": "*", "effect": "ask" },
+    { "action": "edit", "resource": "*", "effect": "ask" },
+    { "action": "external_directory", "resource": "*", "effect": "ask" },
+  ],
 
-  // Strong models for the primary agents
-  "agent": {
-    "build": {
-      "model": "opencode-go/glm-5.3-flash",
-      "variant": "max",
-    },
-
-    "plan": {
-      "model": "opencode-go/glm-5.3-flash",
-      "variant": "max",
-    },
-
-    "orchestrator": {
-      "model": "opencode-go/glm-5.3-flash",
-      "temperature": 0.2,
-      "variant": "max",
-    },
-
-    "plan-runner": {
-      // stick with qwen3.8-flash here aswell if you accept the thinking tradeoff
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.2,
-      "variant": "xhigh",
-    },
+  "agents": {
+    // Strong model for the primary agents
+    "build": { "model": "opencode-go/glm-5.3-flash#max" },
+    "plan": { "model": "opencode-go/glm-5.3-flash#max" },
+    "orchestrator": { "model": "opencode-go/glm-5.3-flash#max" },
 
     // Cheap model for subagents (defined in agents/<id>.md)
-    "code-explorer": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.2,
-      "variant": "xhigh",
-    },
-
-    "code-executor": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.1,
-      "variant": "xhigh",
-    },
-
-    "test-verifier": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.1,
-      "variant": "xhigh",
-    },
-
-    "spec-critic": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.4,
-      "variant": "xhigh",
-    },
-
-    "security-reviewer": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.1,
-      "variant": "xhigh",
-    },
-
-    "docs-reviewer": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.1,
-      "variant": "xhigh",
-    },
-
-    "code-reviewer": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.1,
-      "variant": "xhigh",
-    },
-
-    "api-docs-researcher": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.1,
-      "variant": "xhigh",
-    },
-
-    "host-security-investigator": {
-      "model": "opencode-go/qwen3.8-flash",
-      "temperature": 0.1,
-      "variant": "xhigh",
-    },
+    "plan-runner": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "code-explorer": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "code-executor": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "test-verifier": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "spec-critic": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "security-reviewer": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "docs-reviewer": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "code-reviewer": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "api-docs-researcher": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "host-security-investigator": { "model": "opencode-go/qwen3.8-flash#xhigh" },
   },
 }
