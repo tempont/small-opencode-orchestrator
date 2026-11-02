@@ -74,11 +74,11 @@ It aims to:
 │   │   │   ├── 📝 output-patterns.md
 │   │   │   └── 📝 workflows.md
 │   │   ├── 📁 scripts
-│   │   │   ├── 📄 init_skill.py
-│   │   │   ├── 📄 package_skill.py
-│   │   │   └── 📄 quick_validate.py
-│   │   ├── 📝 SKILL.md
-│   │   └── 📄 LICENSE.txt
+│   │   │   ├── 🐍 init_skill.py
+│   │   │   ├── 🐍 package_skill.py
+│   │   │   └── 🐍 quick_validate.py
+│   │   ├── 📄 LICENSE.txt
+│   │   └── 📝 SKILL.md
 │   └── 📁 task-management
 │       ├── 📁 scripts
 │       │   ├── 📄 migrate-schema.ts
@@ -87,9 +87,9 @@ It aims to:
 │       └── 📄 router.sh
 ├── ⚙️ .gitignore
 ├── 📝 AGENTS.md
-├── ⚙️ cli.json
 ├── 📄 LICENSE
 ├── 📝 README.md
+├── ⚙️ cli.json
 ├── 📄 opencode.jsonc
 ├── ⚙️ package-lock.json
 ├── ⚙️ package.json
