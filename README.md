@@ -115,13 +115,13 @@ Plan approval is not automated; the orchestrator continues Phase B itself.
 
 ## Agents
 
-### Primary agents (Strong models) - Currently Using DeepSeek V4 Pro/GLM 5.3 Flash
+### Primary agents (Strong models) - Currently Using GLM-5.3 Flash (`max`)
 
 - **orchestrator** - Coordinates multi-phase work through plan files, approval gates, and implementation slices
 - **build** - OpenCode Default Agent (Best for simple tasks)
 - **plan** - OpenCode Default Agent  (Best for simple tasks)
 
-### Subagents (Cheap models) - Currently Using DeepSeek V4 Flash/Qwen3.8 Flash
+### Subagents (Cheap models) - Currently Using DeepSeek V4.1 Flash (`max`) - title model uses bare DeepSeek V4.1 Flash
 
 - **plan-runner** - Drafts implementation plans under `.opencode/plans/`
 - **code-executor** - Implements scoped coding tasks with minimal diffs
