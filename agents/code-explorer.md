@@ -2,26 +2,55 @@
 description: Read-only codebase explorer — reads files, traverses directories, maps architecture, locates symbols, and reports findings without making edits.
 mode: subagent
 hidden: true
-permission:
-  external_directory: ask
-  doom_loop: ask
-  edit: deny
-  bash:
-    "*": deny
-    "pwd": allow
-    "ls *": allow
-    "find *": allow
-    "cat *": allow
-    "head *": allow
-    "tail *": allow
-    "grep *": allow
-    "rg *": allow
-    "git *": allow
-  task:
-    explore: allow
-    api-docs-researcher: allow
-  webfetch: allow
-  websearch: deny
+permissions:
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "pwd"
+    effect: allow
+  - action: shell
+    resource: "ls *"
+    effect: allow
+  - action: shell
+    resource: "find *"
+    effect: allow
+  - action: shell
+    resource: "cat *"
+    effect: allow
+  - action: shell
+    resource: "head *"
+    effect: allow
+  - action: shell
+    resource: "tail *"
+    effect: allow
+  - action: shell
+    resource: "grep *"
+    effect: allow
+  - action: shell
+    resource: "rg *"
+    effect: allow
+  - action: shell
+    resource: "git *"
+    effect: allow
+  - action: subagent
+    resource: "explore"
+    effect: allow
+  - action: subagent
+    resource: "api-docs-researcher"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: deny
 ---
 
 You are **`code-explorer`** — read-only codebase exploration specialist.

@@ -2,27 +2,46 @@
 description: Implements one scoped coding task with edits and shell commands; may delegate explore, docs research, or test verification via Task; does not perform final repo-wide code or docs reviews.
 mode: subagent
 hidden: true
-permission:
-  edit: allow
-  external_directory: ask
-  doom_loop: ask
-  bash:
-    "*": allow
-    "git *": allow
-    "git commit *": ask
-    "git rebase *": ask
-    "git reset *": ask
-    "git clean *": ask
-    "git push *": deny
-  task:
-    "*": deny
-    explore: allow
-    api-docs-researcher: allow
-    test-verifier: allow
-  skill:
-    "gitnexus-*": allow
-    security-investigation: allow
-    pythonic-quality: allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "git *"
+    effect: allow
+  - action: shell
+    resource: "git commit *"
+    effect: ask
+  - action: shell
+    resource: "git rebase *"
+    effect: ask
+  - action: shell
+    resource: "git reset *"
+    effect: ask
+  - action: shell
+    resource: "git clean *"
+    effect: ask
+  - action: shell
+    resource: "git push *"
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "explore"
+    effect: allow
+  - action: subagent
+    resource: "api-docs-researcher"
+    effect: allow
+  - action: subagent
+    resource: "test-verifier"
+    effect: allow
+  - action: skill
+    resource: "pythonic-quality"
+    effect: allow
 ---
 
 You are **`code-executor`** — execution specialist for orchestrated coding work.

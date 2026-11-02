@@ -2,21 +2,40 @@
 description: Review code and diffs for security risks involving auth, authorization, secrets, input validation, file handling, shelling out, network access, and tenant boundaries.
 mode: subagent
 hidden: true
-permission:
-  external_directory: ask
-  doom_loop: ask
-  edit: deny
-  bash:
-    "*": deny
-    "pwd": allow
-    "ls *": allow
-    "find *": allow
-    "cat *": allow
-    "grep *": allow
-    "rg *": allow
-    "git *": allow
-  webfetch: deny
-  websearch: deny
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "pwd"
+    effect: allow
+  - action: shell
+    resource: "ls *"
+    effect: allow
+  - action: shell
+    resource: "find *"
+    effect: allow
+  - action: shell
+    resource: "cat *"
+    effect: allow
+  - action: shell
+    resource: "grep *"
+    effect: allow
+  - action: shell
+    resource: "rg *"
+    effect: allow
+  - action: shell
+    resource: "git *"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: deny
+  - action: websearch
+    resource: "*"
+    effect: deny
 ---
 
 You are a senior application security reviewer.

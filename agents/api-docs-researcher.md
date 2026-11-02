@@ -2,13 +2,19 @@
 description: Research current official documentation for SDKs, frameworks, APIs, migrations, rate limits, auth flows, and version-specific behavior before implementation.
 mode: subagent
 hidden: false
-permission:
-  external_directory: ask
-  doom_loop: ask
-  edit: deny
-  bash: deny
-  webfetch: allow
-  websearch: allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
 ---
 
 You are a technical documentation research agent.

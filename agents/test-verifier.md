@@ -2,75 +2,175 @@
 description: Run focused verification after code changes. Check tests, lint, typecheck, build output, and whether acceptance criteria were actually met.
 mode: subagent
 hidden: true
-permission:
-  external_directory: ask
-  doom_loop: ask
-  edit: deny
-  bash:
-    "*": ask
-
-    "pwd": allow
-    "ls *": allow
-    "find *": allow
-    "cat *": allow
-    "head *": allow
-    "tail *": allow
-    "sed *": allow
-    "awk *": allow
-    "grep *": allow
-    "rg *": allow
-    "git *": allow
-
-    "rm *": ask
-    "mv *": ask
-    "cp *": ask
-
-    "pytest": allow
-    "pytest *": allow
-    "ruff": allow
-    "ruff *": allow
-    "mypy": allow
-    "mypy *": allow
-
-    "npm test": allow
-    "npm test *": allow
-    "npm run test": allow
-    "npm run test *": allow
-    "npm run lint": allow
-    "npm run lint *": allow
-    "npm run build": allow
-    "npm run build *": allow
-
-    "pnpm test": allow
-    "pnpm test *": allow
-    "pnpm lint": allow
-    "pnpm lint *": allow
-    "pnpm build": allow
-    "pnpm build *": allow
-
-    "yarn test": allow
-    "yarn test *": allow
-    "yarn lint": allow
-    "yarn lint *": allow
-    "yarn build": allow
-    "yarn build *": allow
-
-    "bun test": allow
-    "bun test *": allow
-    "bun run lint": allow
-    "bun run lint *": allow
-    "bun run build": allow
-    "bun run build *": allow
-
-    "cargo test": allow
-    "cargo test *": allow
-    "cargo check": allow
-    "cargo check *": allow
-
-    "go test": allow
-    "go test *": allow
-  webfetch: deny
-  websearch: deny
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: ask
+  - action: shell
+    resource: "pwd"
+    effect: allow
+  - action: shell
+    resource: "ls *"
+    effect: allow
+  - action: shell
+    resource: "find *"
+    effect: allow
+  - action: shell
+    resource: "cat *"
+    effect: allow
+  - action: shell
+    resource: "head *"
+    effect: allow
+  - action: shell
+    resource: "tail *"
+    effect: allow
+  - action: shell
+    resource: "sed *"
+    effect: allow
+  - action: shell
+    resource: "awk *"
+    effect: allow
+  - action: shell
+    resource: "grep *"
+    effect: allow
+  - action: shell
+    resource: "rg *"
+    effect: allow
+  - action: shell
+    resource: "git *"
+    effect: allow
+  - action: shell
+    resource: "rm *"
+    effect: ask
+  - action: shell
+    resource: "mv *"
+    effect: ask
+  - action: shell
+    resource: "cp *"
+    effect: ask
+  - action: shell
+    resource: "pytest"
+    effect: allow
+  - action: shell
+    resource: "pytest *"
+    effect: allow
+  - action: shell
+    resource: "ruff"
+    effect: allow
+  - action: shell
+    resource: "ruff *"
+    effect: allow
+  - action: shell
+    resource: "mypy"
+    effect: allow
+  - action: shell
+    resource: "mypy *"
+    effect: allow
+  - action: shell
+    resource: "npm test"
+    effect: allow
+  - action: shell
+    resource: "npm test *"
+    effect: allow
+  - action: shell
+    resource: "npm run test"
+    effect: allow
+  - action: shell
+    resource: "npm run test *"
+    effect: allow
+  - action: shell
+    resource: "npm run lint"
+    effect: allow
+  - action: shell
+    resource: "npm run lint *"
+    effect: allow
+  - action: shell
+    resource: "npm run build"
+    effect: allow
+  - action: shell
+    resource: "npm run build *"
+    effect: allow
+  - action: shell
+    resource: "pnpm test"
+    effect: allow
+  - action: shell
+    resource: "pnpm test *"
+    effect: allow
+  - action: shell
+    resource: "pnpm lint"
+    effect: allow
+  - action: shell
+    resource: "pnpm lint *"
+    effect: allow
+  - action: shell
+    resource: "pnpm build"
+    effect: allow
+  - action: shell
+    resource: "pnpm build *"
+    effect: allow
+  - action: shell
+    resource: "yarn test"
+    effect: allow
+  - action: shell
+    resource: "yarn test *"
+    effect: allow
+  - action: shell
+    resource: "yarn lint"
+    effect: allow
+  - action: shell
+    resource: "yarn lint *"
+    effect: allow
+  - action: shell
+    resource: "yarn build"
+    effect: allow
+  - action: shell
+    resource: "yarn build *"
+    effect: allow
+  - action: shell
+    resource: "bun test"
+    effect: allow
+  - action: shell
+    resource: "bun test *"
+    effect: allow
+  - action: shell
+    resource: "bun run lint"
+    effect: allow
+  - action: shell
+    resource: "bun run lint *"
+    effect: allow
+  - action: shell
+    resource: "bun run build"
+    effect: allow
+  - action: shell
+    resource: "bun run build *"
+    effect: allow
+  - action: shell
+    resource: "cargo test"
+    effect: allow
+  - action: shell
+    resource: "cargo test *"
+    effect: allow
+  - action: shell
+    resource: "cargo check"
+    effect: allow
+  - action: shell
+    resource: "cargo check *"
+    effect: allow
+  - action: shell
+    resource: "go test"
+    effect: allow
+  - action: shell
+    resource: "go test *"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: deny
+  - action: websearch
+    resource: "*"
+    effect: deny
 ---
 
 You are a verification agent.

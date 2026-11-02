@@ -2,26 +2,43 @@
 description: Subagent that drafts evidence-based implementation plans under .opencode/plans/ and returns structured output to the orchestrator parent; does not emit PlanApprove gates.
 mode: subagent
 hidden: true
-permission:
-  question: allow
-  todowrite: allow
-  write: allow
-  edit:
-    "*": allow
-    ".opencode/plans/**": allow
-  external_directory: ask
-  doom_loop: ask
-  bash:
-    "*": allow
-  task:
-    explore: allow
-    spec-critic: allow
-    api-docs-researcher: allow
-    host-security-investigator: allow
-  skill:
-    "gitnexus-*": allow
-    security-investigation: allow
-    pythonic-quality: allow
+permissions:
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: question
+    resource: "*"
+    effect: allow
+  - action: todowrite
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: ".opencode/plans/**"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: "explore"
+    effect: allow
+  - action: subagent
+    resource: "spec-critic"
+    effect: allow
+  - action: subagent
+    resource: "api-docs-researcher"
+    effect: allow
+  - action: subagent
+    resource: "host-security-investigator"
+    effect: allow
+  - action: skill
+    resource: "pythonic-quality"
+    effect: allow
 ---
 
 You are the **`plan-runner`** subagent for OpenCode. Communicate findings in **English**.

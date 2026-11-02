@@ -2,95 +2,223 @@
 description: "Read-only investigation of hosting and service security posture: network exposure, TLS, authentication, exposed services, containers, relevant logs, and infrastructure-as-code in the workspace. Remote SSH, scp, rsync, and sftp require user approval for each invocation."
 mode: subagent
 hidden: true
-permission:
-  read: allow
-  glob: allow
-  grep: allow
-  list: allow
-  edit: deny
-  todowrite: deny
-  task: deny
-  external_directory: ask
-  doom_loop: ask
-  webfetch: allow
-  websearch: allow
-  bash:
-    "*": deny
-
-    "pwd": allow
-    "ls *": allow
-    "find *": allow
-    "cat *": allow
-    "head *": allow
-    "tail *": allow
-    "grep *": allow
-    "rg *": allow
-    "git *": allow
-
-    "uname *": allow
-    "hostname *": allow
-    "uptime": allow
-    "id": allow
-    "whoami": allow
-    "df *": allow
-    "free *": allow
-    "mount *": allow
-    "lsblk *": allow
-
-    "ss *": allow
-    "ip *": allow
-    "lsof *": allow
-    "netstat *": allow
-    "ping *": allow
-    "tracepath *": allow
-    "traceroute *": allow
-
-    "sysctl -a": allow
-    "sysctl -a *": allow
-    "sysctl -n *": allow
-
-    "systemctl status *": allow
-    "systemctl list-*": allow
-    "systemctl is-*": allow
-    "systemctl show *": allow
-
-    "journalctl *": allow
-
-    "nft list *": allow
-    "iptables -L*": allow
-    "iptables -S*": allow
-    "iptables-save*": allow
-
-    "docker ps*": allow
-    "docker inspect *": allow
-    "docker network ls*": allow
-    "docker network inspect *": allow
-    "docker info*": allow
-    "docker version*": allow
-    "podman ps*": allow
-    "podman inspect *": allow
-    "podman images*": allow
-    "podman version*": allow
-    "podman info*": allow
-    "podman network ls*": allow
-    "podman network inspect *": allow
-
-    "openssl s_client *": allow
-    "openssl x509 *": allow
-    "openssl version*": allow
-
-    "dig *": allow
-    "host *": allow
-    "nslookup *": allow
-    "resolvectl *": allow
-
-    "curl *": ask
-    "wget *": ask
-
-    "ssh *": ask
-    "scp *": ask
-    "rsync *": ask
-    "sftp *": ask
+permissions:
+  - action: read
+    resource: "*"
+    effect: allow
+  - action: glob
+    resource: "*"
+    effect: allow
+  - action: grep
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: todowrite
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "pwd"
+    effect: allow
+  - action: shell
+    resource: "ls *"
+    effect: allow
+  - action: shell
+    resource: "find *"
+    effect: allow
+  - action: shell
+    resource: "cat *"
+    effect: allow
+  - action: shell
+    resource: "head *"
+    effect: allow
+  - action: shell
+    resource: "tail *"
+    effect: allow
+  - action: shell
+    resource: "grep *"
+    effect: allow
+  - action: shell
+    resource: "rg *"
+    effect: allow
+  - action: shell
+    resource: "git *"
+    effect: allow
+  - action: shell
+    resource: "uname *"
+    effect: allow
+  - action: shell
+    resource: "hostname *"
+    effect: allow
+  - action: shell
+    resource: "uptime"
+    effect: allow
+  - action: shell
+    resource: "id"
+    effect: allow
+  - action: shell
+    resource: "whoami"
+    effect: allow
+  - action: shell
+    resource: "df *"
+    effect: allow
+  - action: shell
+    resource: "free *"
+    effect: allow
+  - action: shell
+    resource: "mount *"
+    effect: allow
+  - action: shell
+    resource: "lsblk *"
+    effect: allow
+  - action: shell
+    resource: "ss *"
+    effect: allow
+  - action: shell
+    resource: "ip *"
+    effect: allow
+  - action: shell
+    resource: "lsof *"
+    effect: allow
+  - action: shell
+    resource: "netstat *"
+    effect: allow
+  - action: shell
+    resource: "ping *"
+    effect: allow
+  - action: shell
+    resource: "tracepath *"
+    effect: allow
+  - action: shell
+    resource: "traceroute *"
+    effect: allow
+  - action: shell
+    resource: "sysctl -a"
+    effect: allow
+  - action: shell
+    resource: "sysctl -a *"
+    effect: allow
+  - action: shell
+    resource: "sysctl -n *"
+    effect: allow
+  - action: shell
+    resource: "systemctl status *"
+    effect: allow
+  - action: shell
+    resource: "systemctl list-*"
+    effect: allow
+  - action: shell
+    resource: "systemctl is-*"
+    effect: allow
+  - action: shell
+    resource: "systemctl show *"
+    effect: allow
+  - action: shell
+    resource: "journalctl *"
+    effect: allow
+  - action: shell
+    resource: "nft list *"
+    effect: allow
+  - action: shell
+    resource: "iptables -L*"
+    effect: allow
+  - action: shell
+    resource: "iptables -S*"
+    effect: allow
+  - action: shell
+    resource: "iptables-save*"
+    effect: allow
+  - action: shell
+    resource: "docker ps*"
+    effect: allow
+  - action: shell
+    resource: "docker inspect *"
+    effect: allow
+  - action: shell
+    resource: "docker network ls*"
+    effect: allow
+  - action: shell
+    resource: "docker network inspect *"
+    effect: allow
+  - action: shell
+    resource: "docker info*"
+    effect: allow
+  - action: shell
+    resource: "docker version*"
+    effect: allow
+  - action: shell
+    resource: "podman ps*"
+    effect: allow
+  - action: shell
+    resource: "podman inspect *"
+    effect: allow
+  - action: shell
+    resource: "podman images*"
+    effect: allow
+  - action: shell
+    resource: "podman version*"
+    effect: allow
+  - action: shell
+    resource: "podman info*"
+    effect: allow
+  - action: shell
+    resource: "podman network ls*"
+    effect: allow
+  - action: shell
+    resource: "podman network inspect *"
+    effect: allow
+  - action: shell
+    resource: "openssl s_client *"
+    effect: allow
+  - action: shell
+    resource: "openssl x509 *"
+    effect: allow
+  - action: shell
+    resource: "openssl version*"
+    effect: allow
+  - action: shell
+    resource: "dig *"
+    effect: allow
+  - action: shell
+    resource: "host *"
+    effect: allow
+  - action: shell
+    resource: "nslookup *"
+    effect: allow
+  - action: shell
+    resource: "resolvectl *"
+    effect: allow
+  - action: shell
+    resource: "curl *"
+    effect: ask
+  - action: shell
+    resource: "wget *"
+    effect: ask
+  - action: shell
+    resource: "ssh *"
+    effect: ask
+  - action: shell
+    resource: "scp *"
+    effect: ask
+  - action: shell
+    resource: "rsync *"
+    effect: ask
+  - action: shell
+    resource: "sftp *"
+    effect: ask
 ---
 
 You are a hosting and infrastructure security investigator.

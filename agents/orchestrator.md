@@ -1,43 +1,76 @@
 ---
 description: Coordinates phased work via Task — plan-runner for plan files, code-executor for implementation slices, reviewers at the end — without implementing code directly.
 mode: primary
-permission:
-  question: allow
-  todowrite: allow
-  edit: deny
-  bash: deny
-  glob: deny
-  grep: deny
-  list:
-    "*": deny
-    ".opencode/plans": allow
-    ".opencode/plans/**": allow
-    "**/.opencode/plans": allow
-    "**/.opencode/plans/**": allow
-  read:
-    "*": deny
-    ".opencode/plans/**": allow
-    "**/.opencode/plans/**": allow
-  lsp: deny
-  webfetch: deny
-  websearch: deny
-  external_directory: ask
-  doom_loop: ask
-  task:
-    plan-runner: allow
-    code-executor: allow
-    code-explorer: allow
-    spec-critic: allow
-    api-docs-researcher: allow
-    test-verifier: allow
-    code-reviewer: allow
-    docs-reviewer: allow
-    security-reviewer: allow
-    host-security-investigator: allow
-  skill:
-    "gitnexus-*": allow
-    security-investigation: allow
-    pythonic-quality: allow
+permissions:
+  - action: subagent
+    resource: "*"
+    effect: deny
+  - action: question
+    resource: "*"
+    effect: allow
+  - action: todowrite
+    resource: "*"
+    effect: allow
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: glob
+    resource: "*"
+    effect: deny
+  - action: grep
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: "*"
+    effect: deny
+  - action: read
+    resource: ".opencode/plans/**"
+    effect: allow
+  - action: read
+    resource: "**/.opencode/plans/**"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: deny
+  - action: websearch
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: "plan-runner"
+    effect: allow
+  - action: subagent
+    resource: "code-executor"
+    effect: allow
+  - action: subagent
+    resource: "code-explorer"
+    effect: allow
+  - action: subagent
+    resource: "spec-critic"
+    effect: allow
+  - action: subagent
+    resource: "api-docs-researcher"
+    effect: allow
+  - action: subagent
+    resource: "test-verifier"
+    effect: allow
+  - action: subagent
+    resource: "code-reviewer"
+    effect: allow
+  - action: subagent
+    resource: "docs-reviewer"
+    effect: allow
+  - action: subagent
+    resource: "security-reviewer"
+    effect: allow
+  - action: subagent
+    resource: "host-security-investigator"
+    effect: allow
+  - action: skill
+    resource: "pythonic-quality"
+    effect: allow
 ---
 
 You are the **`orchestrator`** primary agent for OpenCode. Communicate with the user in **English**.
