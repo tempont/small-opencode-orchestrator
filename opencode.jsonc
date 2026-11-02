@@ -3,41 +3,7 @@
 
   // No plugins: plan-post-approval was removed; approval no longer triggers automation.
 
-  // Only non-catalog variants are declared. Catalog variants (max/xhigh) remain untouched.
-  "providers": {
-    "opencode-go": {
-      "models": {
-        "glm-5.3-flash": {
-          "variants": [
-            {
-              "id": "max-t02",
-              "settings": { "reasoningEffort": "max" },
-              "body": { "temperature": 0.2 },
-            },
-          ],
-        },
-        "deepseek-v4.1-flash": {
-          "variants": [
-            {
-              "id": "max-t01",
-              "settings": { "reasoningEffort": "max" },
-              "body": { "temperature": 0.1 },
-            },
-            {
-              "id": "max-t02",
-              "settings": { "reasoningEffort": "max" },
-              "body": { "temperature": 0.2 },
-            },
-            {
-              "id": "max-t04",
-              "settings": { "reasoningEffort": "max" },
-              "body": { "temperature": 0.4 },
-            },
-          ],
-        },
-      },
-    },
-  },
+  // Per-agent temperatures dropped: the opencode-go gateway rejects config-declared variant IDs at session-create (only catalog variants low/high/max/xhigh validate). Catalog reasoning variants apply as in V1.
 
   "default_agent": "orchestrator",
   "share": "manual",
@@ -56,18 +22,18 @@
   "agents": {
     "build": { "model": "opencode-go/glm-5.3-flash#max" },
     "plan": { "model": "opencode-go/glm-5.3-flash#max" },
-    "orchestrator": { "model": "opencode-go/glm-5.3-flash#max-t02" },
+    "orchestrator": { "model": "opencode-go/glm-5.3-flash#max" },
 
-    "plan-runner": { "model": "opencode-go/deepseek-v4.1-flash#max-t02" },
-    "code-explorer": { "model": "opencode-go/deepseek-v4.1-flash#max-t02" },
-    "code-executor": { "model": "opencode-go/deepseek-v4.1-flash#max-t01" },
-    "test-verifier": { "model": "opencode-go/deepseek-v4.1-flash#max-t01" },
-    "spec-critic": { "model": "opencode-go/deepseek-v4.1-flash#max-t04" },
-    "security-reviewer": { "model": "opencode-go/deepseek-v4.1-flash#max-t01" },
-    "docs-reviewer": { "model": "opencode-go/deepseek-v4.1-flash#max-t01" },
-    "code-reviewer": { "model": "opencode-go/deepseek-v4.1-flash#max-t01" },
-    "api-docs-researcher": { "model": "opencode-go/deepseek-v4.1-flash#max-t01" },
-    "host-security-investigator": { "model": "opencode-go/deepseek-v4.1-flash#max-t01" },
+    "plan-runner": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "code-explorer": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "code-executor": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "test-verifier": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "spec-critic": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "security-reviewer": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "docs-reviewer": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "code-reviewer": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "api-docs-researcher": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+    "host-security-investigator": { "model": "opencode-go/deepseek-v4.1-flash#max" },
 
     // small_model → title agent model (no variant in V1, keep none).
     "title": { "model": "opencode-go/deepseek-v4.1-flash" },
