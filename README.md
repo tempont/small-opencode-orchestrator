@@ -283,13 +283,21 @@ CLI-only settings (theme, keybinds, diffs, session view, animations, and `attent
 
 ### [1.1.6] - 2026-11-02
 
-- **Removed**
-  - `plan-post-approval` plugin and `plugin-src/`; `@opencode-ai/plugin` dependency; plugin tsconfig include; unused `tui.json` and empty `command/`.
+- **Added**
+  - Built-in policy re-pins in `agents.*`: `explore` keeps its hard `edit` deny and `shell` allow; `plan` gets plan-dir `edit` allows (`.opencode/plans/**`, `.opencode/plan/**`); `summary` and `compaction` pinned to cheap models (bare `deepseek-v4.1-flash`), per-profile variants of the same pins; denies/asks restored even with the global ask baseline (configured agent rules are the last layer in V2).
+  - `experimental.todo: true` (root and all profiles): V2 defaults todowrite off; orchestrator/plan-runner rely on it.
+  - Profile self-containment: permissions array, `todo` flag, and `title`/`summary`/`compaction` pins live in each profile (catalog-only refs: `glm-5.3-flash#max`, `qwen3.8-flash#xhigh`, bare `mimo-v2.5`). Validation note in profiles section (`opencode --standalone` merge check).
+  - `.gitignore` shields for local-only skills re-added (`/skills/context7/`, `/skills/gitnexus*`, `/skills/agent-memory`, `agent-memory.skill`).
 - **Changed**
-  - Native V2 config shapes: `agents`/`permissions`/`update`/`agents.title.model` semantics (no `providers` override); subagent permissions via ordered `permissions` arrays with `subagent` rules; `bash`→`shell` renames; deny-first `subagent '*'` hardening for orchestrator/plan-runner/code-explorer.
+  - Native V2 config shapes in `opencode.jsonc` and profiles: `agents` map with joined `model#variant` refs (no separate `variant` key; no `providers` block); top-level ordered `permissions` array (shell/edit/external_directory ask) replacing the `permission` map; `autoupdate: true` → `update: "auto"`; `small_model` → `agents.title.model`.
+  - Agent frontmatter (`agents/*.md` ×11): `permission` maps → ordered `permissions` arrays; action renames `bash`→`shell`, `task`→`subagent`, `write`→`edit`; dropped inert `doom_loop`/`lsp`/`list` entries and per-agent `external_directory` (global rule covers it); `todowrite` rules retained.
+  - Deny-first `subagent "*"` allowlist hardening added to orchestrator/plan-runner/code-explorer; code-executor and host-security-investigator keep their pre-existing deny-first from V1.
   - Variant/temperature policy: (i) v2.2.3 rejects variant IDs not present in the model catalog at session-create, so only catalog variants are used; (ii) per-agent `temperature` was deliberately dropped in the same fallback — with reasoning on, deepseek/qwen families ignore it anyway, and no V1 behavior was lost at the gateway since V1 sent the same catalog efforts.
-  - Plan approval is orchestration-driven: the orchestrator continues Phase B; no summarize/prompt handoff.
-  - Profiles converted; `OPENCODE_CONFIG` merges over the global config (validate with `opencode --standalone`).
+  - Plan approval is orchestration-driven: orchestrator-routed approvals continue Phase B in the orchestrator session; plan-routed approvals end there and you switch to `build` (or the orchestrator) to implement. No summarize/prompt handoff automation.
+  - README current-state corrections: structure tree, profile table (incl. `budget/qwen-mimo`), model headings, permissions wording, `--standalone` profile-validation caveat, plugin claims removed.
+- **Removed**
+  - `plan-post-approval` plugin and `plugin-src/`; the `plugin` config entry; the `@opencode-ai/plugin` dependency (with package-lock regeneration; project version `1.1.5`→`1.1.6`); the plugin tsconfig include; auto-generated `.opencode/package.json` and lockfile.
+  - Legacy client files: `tui.json` (also untracked the phantom skip-worktree-tracked empty blob) and the empty `command/` directory; the `tui.json` and `/command` ignore entries pruned.
 
 ### [1.1.5] - 2026-09-28
 
