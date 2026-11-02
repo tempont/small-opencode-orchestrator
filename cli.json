@@ -18,7 +18,8 @@
   "session": {
     "sidebar": "auto",
     "scrollbar": false,
-    "thinking": "hide"
+    "thinking": "show",
+    "permissions": "autoaccept"
   },
   "animations": true
 }
