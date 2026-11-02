@@ -24,7 +24,7 @@ This repository provides a small orchestrator-based pattern that keeps the workf
 - **Token-conscious delegation** - Subagents receive focused tasks instead of the full problem context whenever possible
 - **Approval-gated planning** - Non-trivial work is planned before implementation starts
 - **Minimal framework overhead** - The system is implemented as OpenCode configuration, agent prompts, and skills
-- **Reusable development skills** - Shared skill definitions for delegation, task management, Python quality, and security investigation
+- **Reusable development skills** - Shared skill definitions for delegation, task management, Python quality, and skill authoring
 
 ## Design goals
 
@@ -60,8 +60,6 @@ It aims to:
 │   │   └── 📁 glm-qwen
 │   │       └── 📄 opencode.jsonc
 │   └── 📁 budget
-│       ├── 📁 deepseek-vision
-│       │   └── 📄 opencode.jsonc
 │       ├── 📁 glm-deepseek
 │       │   └── 📄 opencode.jsonc
 │       └── 📁 qwen-mimo
@@ -72,6 +70,15 @@ It aims to:
 │   ├── 📁 pythonic-quality
 │   │   └── 📝 SKILL.md
 │   ├── 📁 skill-creator
+│   │   ├── 📁 references
+│   │   │   ├── 📝 output-patterns.md
+│   │   │   └── 📝 workflows.md
+│   │   ├── 📁 scripts
+│   │   │   ├── 📄 init_skill.py
+│   │   │   ├── 📄 package_skill.py
+│   │   │   └── 📄 quick_validate.py
+│   │   ├── 📝 SKILL.md
+│   │   └── 📄 LICENSE.txt
 │   └── 📁 task-management
 │       ├── 📁 scripts
 │       │   ├── 📄 migrate-schema.ts
@@ -141,7 +148,11 @@ It may be unnecessary for very small edits where a direct `build` agent is faste
 ## Playing with profiles
 
 Slowly adding new opencode.jsonc files to `profiles/*` that can be used to quick explore different models
-and combinations of agents. Simply use the default `opencode.jsonc` if you don't want to test anything. Profiles are merged additively on top of the global config, so plugins and permissions are inherited from `opencode.jsonc` — profile files only need to override models and variants.
+and combinations of agents. Simply use the default `opencode.jsonc` if you don't want to test anything.
+
+`OPENCODE_CONFIG` **merges** the profile over the global config: values win per key, agent maps merge by ID (root agents not mentioned in the profile still apply), and permission arrays are concatenated (the root's rules first, then the profile's identical rules). A profile is also valid as a sole config. Each profile stays self-contained for permissions and uses only catalog variant refs (`#max`/`#xhigh`, plus bare `mimo-v2.5`), with no `providers` override and no per-agent temperature.
+
+Validate a profile with `OPENCODE_CONFIG="$PWD/profiles/<profile>/opencode.jsonc" opencode --standalone debug agents`. A bare `opencode debug agents` reads the background service's root config, so it is a false pass for profile checks.
 
 You can select a profile by using OpenCode's `OPENCODE_CONFIG` environment variable, that makes it super easy:
 
@@ -149,11 +160,12 @@ Currently available test profiles:
 
 | Profile | Configuration | Models |
 |---------|---------------|--------|
-| Default             | `opencode.jsonc`                          | Deepseek V4 Pro / Flash
-| Budget / DeepSeek Vision | `profiles/budget/deepseek-vision/opencode.jsonc` | Deepseek V4 Pro / Deepseek V4 Flash Vision Exp |
-| Budget / GLM + Qwen | `profiles/budget/glm-qwen/opencode.jsonc` | GLM-5.3 / Qwen3.8
+| Default             | `opencode.jsonc`                          | GLM-5.3 Flash `max` / DeepSeek V4.1 Flash `max`
+| Budget / GLM + DeepSeek | `profiles/budget/glm-deepseek/opencode.jsonc` | GLM-5.3 Flash `max` / DeepSeek V4.1 Flash `max`
+| Balanced / GLM + Qwen | `profiles/balanced/glm-qwen/opencode.jsonc` | GLM-5.3 Flash `max` / Qwen3.8 Flash `xhigh`
+| Budget / Qwen + MiMo | `profiles/budget/qwen-mimo/opencode.jsonc` | Qwen3.8 Flash `xhigh` / MiMo V2.5 (bare, no variants)
 
-Replace `<profile>` below with the desired profile path, for example `budget/glm-qwen`.
+Replace `<profile>` below with the desired profile path, for example `balanced/glm-qwen`.
 
 ### Bash / Zsh
 
@@ -204,7 +216,6 @@ set -Ux OPENCODE_CONFIG "$HOME/.config/opencode/profiles/<profile>/opencode.json
 - **agent-delegation** - Decision table for routing work to the appropriate subagent
 - **task-management** - CLI for tracking feature subtasks with dependencies
 - **pythonic-quality** - Pythonic idioms, SOLID design, and Liskov-safe patterns
-- **security-investigation** - Security audit orchestration
 - **skill-creator** - Guide for creating effective skills
 
 ## Installation
@@ -251,14 +262,24 @@ review subagents
 Key settings in `opencode.jsonc`:
 
 - **`default_agent: "orchestrator"`** - Sets the orchestrator as the default entry point
-- **`permission`** - Provides a minimal deny-by-default workspace baseline; each agent declares its tool policy in `agents/<id>.md` frontmatter
-- **`agent.*.model`** - Configures model selection for primary agents and selected subagents
-- **`agent.*.variant`** - Per-agent thinking variant (e.g. `"max"`); **`temperature`** - Tune agent behavior where needed
+- **`permissions`** - Provides a minimal ask-by-default workspace baseline; each agent declares its tool policy in `agents/<id>.md` frontmatter
+- **`agents.*.model`** - Configures model selection for primary agents and selected subagents; a ref may carry a `#variant` suffix (e.g. `opencode-go/glm-5.3-flash#max`). On the `opencode-go` gateway only catalog variants are accepted (v2.2.3 rejects config-declared ids at session-create), so per-agent `temperature` is not configurable and was dropped
+- **`agents.title.model`** - Sets the small model used by the built-in `title` agent (session titles); replaces the old `small_model` key
 
 CLI-only settings (theme, keybinds, diffs, session view, animations, and `attention` alerts) live in the separate `cli.json` and are not read from `opencode.jsonc`.
 
 
 ## Changelog
+
+### [1.1.6] - 2026-11-02
+
+- **Removed**
+  - `plan-post-approval` plugin and `plugin-src/`; `@opencode-ai/plugin` dependency; plugin tsconfig include; unused `tui.json` and empty `command/`.
+- **Changed**
+  - Native V2 config shapes: `agents`/`permissions`/`update`/`agents.title.model` semantics (no `providers` override); subagent permissions via ordered `permissions` arrays with `subagent` rules; `bash`→`shell` renames; deny-first `subagent '*'` hardening for orchestrator/plan-runner/code-explorer.
+  - Per-agent `temperature` dropped: the `opencode-go` gateway rejects config-declared variant ids at session-create (v2.2.3), so agents use catalog variants (`#max`/`#xhigh`, bare `mimo-v2.5` in the qwen-mimo profile).
+  - Plan approval is orchestration-driven: the orchestrator continues Phase B; no summarize/prompt handoff.
+  - Profiles converted; `OPENCODE_CONFIG` merges over the global config (validate with `opencode --standalone`).
 
 ### [1.1.5] - 2026-09-28
 
