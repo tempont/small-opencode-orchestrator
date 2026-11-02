@@ -5,6 +5,9 @@
   "share": "manual",
   "update": "auto",
 
+  // V2 todos are off by default; orchestrator/plan-runner rely on todowrite.
+  "experimental": { "todo": true },
+
   // Minimal workspace baseline; per-agent tool policy lives in agents/<id>.md frontmatter. If you want it more permissive you can copy to your project workspace ./opencode/opencode.jsonc with "allow" instead
   "permissions": [
     { "action": "shell", "resource": "*", "effect": "ask" },
@@ -15,7 +18,16 @@
   "agents": {
     // Strong model for the primary agents
     "build": { "model": "opencode-go/glm-5.3-flash#max" },
-    "plan": { "model": "opencode-go/glm-5.3-flash#max" },
+    "plan": {
+      "model": "opencode-go/glm-5.3-flash#max",
+      // Re-pin shipped edit scope (configured rules append after the global ask baseline).
+      "permissions": [
+        { "action": "edit", "resource": "**/.opencode/plans/**", "effect": "allow" },
+        { "action": "edit", "resource": ".opencode/plans/**", "effect": "allow" },
+        { "action": "edit", "resource": "**/.opencode/plan/**", "effect": "allow" },
+        { "action": "edit", "resource": ".opencode/plan/**", "effect": "allow" },
+      ],
+    },
     "orchestrator": { "model": "opencode-go/glm-5.3-flash#max" },
 
     // Cheap model for subagents (defined in agents/<id>.md)
@@ -29,5 +41,19 @@
     "code-reviewer": { "model": "opencode-go/deepseek-v4.1-flash#max" },
     "api-docs-researcher": { "model": "opencode-go/deepseek-v4.1-flash#max" },
     "host-security-investigator": { "model": "opencode-go/deepseek-v4.1-flash#max" },
+
+    // Re-pin shipped builtin policy for explore as a configured agent rule (they append
+    // after the global ask baseline, so they win for this entry).
+    "explore": {
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "*", "effect": "allow" },
+      ],
+    },
+
+    // Cheap maintenance-agent pins.
+    "title": { "model": "opencode-go/deepseek-v4.1-flash" },
+    "summary": { "model": "opencode-go/deepseek-v4.1-flash" },
+    "compaction": { "model": "opencode-go/deepseek-v4.1-flash" },
   },
 }

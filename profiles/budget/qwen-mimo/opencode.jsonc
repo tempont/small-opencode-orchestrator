@@ -5,6 +5,9 @@
   "share": "manual",
   "update": "auto",
 
+  // V2 todos are off by default; orchestrator/plan-runner rely on todowrite.
+  "experimental": { "todo": true },
+
   // Minimal workspace baseline; per-agent tool policy lives in agents/<id>.md frontmatter. If you want it more permissive you can copy to your project workspace ./opencode/opencode.jsonc with "allow" instead
   "permissions": [
     { "action": "shell", "resource": "*", "effect": "ask" },
@@ -15,7 +18,16 @@
   "agents": {
     // Strong model for the primary agents
     "build": { "model": "opencode-go/qwen3.8-flash#xhigh" },
-    "plan": { "model": "opencode-go/qwen3.8-flash#xhigh" },
+    "plan": {
+      "model": "opencode-go/qwen3.8-flash#xhigh",
+      // Re-pin shipped edit scope (configured rules append after the global ask baseline).
+      "permissions": [
+        { "action": "edit", "resource": "**/.opencode/plans/**", "effect": "allow" },
+        { "action": "edit", "resource": ".opencode/plans/**", "effect": "allow" },
+        { "action": "edit", "resource": "**/.opencode/plan/**", "effect": "allow" },
+        { "action": "edit", "resource": ".opencode/plan/**", "effect": "allow" },
+      ],
+    },
     "orchestrator": { "model": "opencode-go/qwen3.8-flash#xhigh" },
 
     // Cheap model for subagents (defined in agents/<id>.md). mimo-v2.5 has no catalog reasoning variants, so the ref stays bare: any "#variant" is rejected at session-create.
@@ -29,5 +41,19 @@
     "code-reviewer": { "model": "opencode-go/mimo-v2.5" },
     "api-docs-researcher": { "model": "opencode-go/mimo-v2.5" },
     "host-security-investigator": { "model": "opencode-go/mimo-v2.5" },
+
+    // Re-pin shipped builtin policy for explore as a configured agent rule (they append
+    // after the global ask baseline, so they win for this entry).
+    "explore": {
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "*", "effect": "allow" },
+      ],
+    },
+
+    // Cheap maintenance-agent pins (bare mimo: no catalog variants).
+    "title": { "model": "opencode-go/mimo-v2.5" },
+    "summary": { "model": "opencode-go/mimo-v2.5" },
+    "compaction": { "model": "opencode-go/mimo-v2.5" },
   },
 }

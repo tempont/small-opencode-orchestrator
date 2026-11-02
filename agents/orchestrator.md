@@ -106,7 +106,7 @@ Understand the user request and think about the best way to accomplish it by rou
 
 Plan approval does **not** trigger an automated handoff. The `plan-post-approval` plugin was removed during the V2 migration, so no `session.summarize` or `session.prompt` is injected after a `question` reply. After the user selects **Approve**, **you** continue in this session.
 
-If the **routing agent** was **`plan`**, the `plan` primary owns its implementation loop; orchestrator is not involved and there is no `build` handoff.
+If the **routing agent** was **`plan`**, no automated handoff occurs: the `plan` session ends at approval — open the approved plan file and switch to **`build`** (or hand control to the orchestrator) to implement.
 
 If the **routing agent** was **`orchestrator`**, continue immediately with the steps below. There is no plugin skip/dedupe path and no configured handoff agent.
 

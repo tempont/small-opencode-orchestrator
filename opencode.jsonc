@@ -21,7 +21,16 @@
 
   "agents": {
     "build": { "model": "opencode-go/glm-5.3-flash#max" },
-    "plan": { "model": "opencode-go/glm-5.3-flash#max" },
+    "plan": {
+      "model": "opencode-go/glm-5.3-flash#max",
+      // Re-pin shipped edit scope (configured rules append after the global ask baseline).
+      "permissions": [
+        { "action": "edit", "resource": "**/.opencode/plans/**", "effect": "allow" },
+        { "action": "edit", "resource": ".opencode/plans/**", "effect": "allow" },
+        { "action": "edit", "resource": "**/.opencode/plan/**", "effect": "allow" },
+        { "action": "edit", "resource": ".opencode/plan/**", "effect": "allow" },
+      ],
+    },
     "orchestrator": { "model": "opencode-go/glm-5.3-flash#max" },
 
     "plan-runner": { "model": "opencode-go/deepseek-v4.1-flash#max" },
@@ -37,5 +46,18 @@
 
     // small_model → title agent model (no variant in V1, keep none).
     "title": { "model": "opencode-go/deepseek-v4.1-flash" },
+
+    // Re-pin shipped builtin policy for explore as a configured agent rule (configured
+    // rules are the last layer and win over the global ask baseline; V2 docs: builtin
+    // policies are defaults that "later global and agent rules override").
+    "explore": {
+      "permissions": [
+        { "action": "edit", "resource": "*", "effect": "deny" },
+        { "action": "shell", "resource": "*", "effect": "allow" },
+      ],
+    },
+    // Cheap-model pins for maintenance agents (title already pinned).
+    "summary": { "model": "opencode-go/deepseek-v4.1-flash" },
+    "compaction": { "model": "opencode-go/deepseek-v4.1-flash" },
   },
 }

@@ -33,6 +33,10 @@ Thumbs.db
 .opencode/plans/
 
 # Other Skills
+/skills/context7/
+/skills/gitnexus*
+/skills/agent-memory
+agent-memory.skill
 
 # Personal
 .opencode

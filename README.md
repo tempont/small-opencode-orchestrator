@@ -20,7 +20,7 @@ This repository provides a small orchestrator-based pattern that keeps the workf
 ## What this provides
 
 - **A very simple orchestrator pattern** - A central agent coordinates planning, approval, implementation, and review phases that you can build upon and customize as needed.
-- **Scoped subagents** - Specialized agents handle planning, execution, testing, documentation, security, and code review
+- **Scoped subagents** - Specialized agents handle planning, read-only exploration, execution, testing, documentation, security, and code review
 - **Token-conscious delegation** - Subagents receive focused tasks instead of the full problem context whenever possible
 - **Approval-gated planning** - Non-trivial work is planned before implementation starts
 - **Minimal framework overhead** - The system is implemented as OpenCode configuration, agent prompts, and skills
@@ -36,7 +36,7 @@ It aims to:
 - Reduce unnecessary context passed between agents
 - Preserve code quality through explicit planning and review steps
 - Make agent responsibilities clear
-- Avoid excessive automation that hides what is happening
+- Avoid excessive hidden behavior that obscures what is happening
 - Provide a useful starting point for customizing OpenCode workflows
 - Sync the improvements with my own personal workflow.
 
@@ -115,15 +115,16 @@ Plan approval is not automated; the orchestrator continues Phase B itself.
 
 ## Agents
 
-### Primary agents (Strong models) - Currently Using GLM-5.3 Flash (`max`)
+### Primary agents (Strong models) - GLM-5.3 Flash `max` (default config)
 
 - **orchestrator** - Coordinates multi-phase work through plan files, approval gates, and implementation slices
 - **build** - OpenCode Default Agent (Best for simple tasks)
 - **plan** - OpenCode Default Agent  (Best for simple tasks)
 
-### Subagents (Cheap models) - Currently Using DeepSeek V4.1 Flash (`max`) - title model uses bare DeepSeek V4.1 Flash
+### Subagents (Cheap models) - DeepSeek V4.1 Flash `max` (default config)
 
 - **plan-runner** - Drafts implementation plans under `.opencode/plans/`
+- **code-explorer** - Read-only exploration: maps architecture and locates symbols; the orchestrator's repo-discovery path.
 - **code-executor** - Implements scoped coding tasks with minimal diffs
 - **test-verifier** - Validates changes through tests, linting, and type checking
 - **code-reviewer** - Reviews diffs for correctness, maintainability, and implementation risk
@@ -150,9 +151,9 @@ It may be unnecessary for very small edits where a direct `build` agent is faste
 Slowly adding new opencode.jsonc files to `profiles/*` that can be used to quick explore different models
 and combinations of agents. Simply use the default `opencode.jsonc` if you don't want to test anything.
 
-`OPENCODE_CONFIG` **merges** the profile over the global config: values win per key, agent maps merge by ID (root agents not mentioned in the profile still apply), and permission arrays are concatenated (the root's rules first, then the profile's identical rules). A profile is also valid as a sole config. Each profile stays self-contained for permissions and uses only catalog variant refs (`#max`/`#xhigh`, plus bare `mimo-v2.5`), with no `providers` override and no per-agent temperature.
+Profiles are self-contained (they carry permissions, todo flag, and title/summary/compaction pins) and also MERGE over the global config via `OPENCODE_CONFIG`: per-key last-wins, agents maps merge, permission rules append after root rules — validate with `opencode --standalone`, since a plain `opencode debug agents` reads the running background service's root config and is a false pass.
 
-Validate a profile with `OPENCODE_CONFIG="$PWD/profiles/<profile>/opencode.jsonc" opencode --standalone debug agents`. A bare `opencode debug agents` reads the background service's root config, so it is a false pass for profile checks.
+Keep model refs on gateway-catalog variants only (`#max`, `#xhigh`; `mimo-v2.5` has no variants and stays bare) — v2.2.3 rejects unknown variant IDs at session-create; do not reintroduce custom or temperature variants.
 
 You can select a profile by using OpenCode's `OPENCODE_CONFIG` environment variable, that makes it super easy:
 
@@ -235,6 +236,11 @@ set -Ux OPENCODE_CONFIG "$HOME/.config/opencode/profiles/<profile>/opencode.json
    npm install
    ```
 
+### Development notes
+
+- `npm install` installs devDeps by default; under `NODE_ENV=production` use `npm install --include=dev`.
+- Typecheck with `npx tsc --noEmit` (`tsconfig.json` now includes only `skills/**/*.ts`; plain `npx tsc` emits JS).
+
 ## Usage
 
 Start OpenCode and describe your task.
@@ -252,6 +258,8 @@ plan-runner / plan
    ↓
 user approval
    ↓
+code-explorer (when needed)
+   ↓
 code-executor / build
    ↓
 review subagents
@@ -262,9 +270,11 @@ review subagents
 Key settings in `opencode.jsonc`:
 
 - **`default_agent: "orchestrator"`** - Sets the orchestrator as the default entry point
-- **`permissions`** - Provides a minimal ask-by-default workspace baseline; each agent declares its tool policy in `agents/<id>.md` frontmatter
-- **`agents.*.model`** - Configures model selection for primary agents and selected subagents; a ref may carry a `#variant` suffix (e.g. `opencode-go/glm-5.3-flash#max`). On the `opencode-go` gateway only catalog variants are accepted (v2.2.3 rejects config-declared ids at session-create), so per-agent `temperature` is not configurable and was dropped
-- **`agents.title.model`** - Sets the small model used by the built-in `title` agent (session titles); replaces the old `small_model` key
+- **`permissions`** - Minimal workspace baseline (ask on `shell`, `edit`, and `external_directory`); each agent declares its own ordered tool policy in `agents/<id>.md` frontmatter
+- **`experimental.todo: true`** - V2 defaults todowrite off; orchestrator/plan-runner rely on it.
+- **external_directory ask rule** - V2 defaults to allow; restores the V1 ask-on-outside-project behavior. The global baseline asks only for shell, edit, and external_directory; read/glob/grep/webfetch/websearch follow OpenCode defaults, custom agents define their own ordered rules, and builtin shipped policies (explore's read-only denies, plan's edit scope, summary/compaction/title model pins) are re-pinned in `agents.*` to win over the baseline.
+- **`agents.*.model`** - Configures model selection for primary agents and selected subagents; a ref may carry a `#variant` suffix (e.g. `opencode-go/glm-5.3-flash#max`). v2.2.3 rejects variant IDs not present in the model catalog at session-create, so only catalog variants are used. Per-agent `temperature` was deliberately dropped in the same fallback: with reasoning on, the deepseek/qwen families ignore it anyway, and no V1 behavior was lost at the gateway (V1 sent the same catalog efforts).
+- **`agents.title.model`** - Sets the small model used by the built-in `title` agent (session titles); replaces the old `small_model` key. `agents.summary.model` and `agents.compaction.model` pin the maintenance agents the same way.
 
 CLI-only settings (theme, keybinds, diffs, session view, animations, and `attention` alerts) live in the separate `cli.json` and are not read from `opencode.jsonc`.
 
@@ -277,7 +287,7 @@ CLI-only settings (theme, keybinds, diffs, session view, animations, and `attent
   - `plan-post-approval` plugin and `plugin-src/`; `@opencode-ai/plugin` dependency; plugin tsconfig include; unused `tui.json` and empty `command/`.
 - **Changed**
   - Native V2 config shapes: `agents`/`permissions`/`update`/`agents.title.model` semantics (no `providers` override); subagent permissions via ordered `permissions` arrays with `subagent` rules; `bash`→`shell` renames; deny-first `subagent '*'` hardening for orchestrator/plan-runner/code-explorer.
-  - Per-agent `temperature` dropped: the `opencode-go` gateway rejects config-declared variant ids at session-create (v2.2.3), so agents use catalog variants (`#max`/`#xhigh`, bare `mimo-v2.5` in the qwen-mimo profile).
+  - Variant/temperature policy: (i) v2.2.3 rejects variant IDs not present in the model catalog at session-create, so only catalog variants are used; (ii) per-agent `temperature` was deliberately dropped in the same fallback — with reasoning on, deepseek/qwen families ignore it anyway, and no V1 behavior was lost at the gateway since V1 sent the same catalog efforts.
   - Plan approval is orchestration-driven: the orchestrator continues Phase B; no summarize/prompt handoff.
   - Profiles converted; `OPENCODE_CONFIG` merges over the global config (validate with `opencode --standalone`).
 

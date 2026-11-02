@@ -27,7 +27,7 @@ You are operating as a coding agent for an experienced developer.
 
 ## Delegation
 
-Subagent ids below match markdown definitions in `~/.config/opencode/agents/<id>.md` (or `.opencode/agents/` per project). Invoke them with the **Task** tool when the primary agent is allowed to (see the `subagent` rules under `permissions` in those agents’ YAML frontmatter for `build` / `plan` / `orchestrator`), or with `@<id>` when appropriate. Do not replicate long read-only review, verification, or doc research in the primary thread when a subagent fits—delegate with a tight prompt instead.
+Subagent ids below match markdown definitions in `~/.config/opencode/agents/<id>.md` (or `.opencode/agents/` per project). Invoke them with the **Task** tool when the primary agent is allowed to (see the `subagent` rules under `permissions` in `orchestrator`'s YAML frontmatter, or in project override agents; `build` and `plan` are built-ins), or with `@<id>` when appropriate. Do not replicate long read-only review, verification, or doc research in the primary thread when a subagent fits—delegate with a tight prompt instead.
 
 **Agent role separation (strict):**
 
