@@ -23,7 +23,7 @@ This repository provides a small orchestrator-based pattern that keeps the workf
 - **Scoped subagents** - Specialized agents handle planning, execution, testing, documentation, security, and code review
 - **Token-conscious delegation** - Subagents receive focused tasks instead of the full problem context whenever possible
 - **Approval-gated planning** - Non-trivial work is planned before implementation starts
-- **Minimal framework overhead** - The system is implemented as OpenCode configuration, agent prompts, skills, and a small plugin
+- **Minimal framework overhead** - The system is implemented as OpenCode configuration, agent prompts, and skills
 - **Reusable development skills** - Shared skill definitions for delegation, task management, Python quality, and security investigation
 
 ## Design goals
@@ -55,8 +55,6 @@ It aims to:
 │   ├── 📝 security-reviewer.md
 │   ├── 📝 spec-critic.md
 │   └── 📝 test-verifier.md
-├── 📁 plugin-src
-│   └── 📄 plan-post-approval.ts
 ├── 📁 profiles
 │   ├── 📁 balanced
 │   │   └── 📁 glm-qwen
@@ -105,6 +103,8 @@ For non-trivial tasks, the workflow typically follows this pattern:
 6. **Review agents validate the result** for correctness, tests, documentation impact, and security concerns
 
 This keeps the main agent focused on coordination instead of forcing one large prompt/session to handle every phase of the task.
+
+Plan approval is not automated; the orchestrator continues Phase B itself.
 
 ## Agents
 
@@ -199,21 +199,6 @@ Persistent:
 set -Ux OPENCODE_CONFIG "$HOME/.config/opencode/profiles/<profile>/opencode.jsonc"
 ```
 
-## Plugins
-
-### Plan post-approval handoff
-
-`plugin-src/plan-post-approval.ts` (loaded via the `plugin` tuple in `opencode.jsonc`) automates the handoff after a plan is approved through `PlanApprove`.
-
-It:
-
-- Extracts plan file paths from approval questions
-- Uses the last user message `agent` field as routing context
-- Hands off `plan` sessions to `build` after idle using `session.summarize` and `session.prompt`
-- Avoids duplicate Phase B automation for `orchestrator` sessions when its plugin option `plan_post_approval_handoff_agent` is set to `orchestrator` (passed via the `plugin` tuple in `opencode.jsonc`, not under `agent.orchestrator`, so it never reaches a provider request body)
-- Reads `plan_post_approval_handoff_agent` from plugin options first, then falls back to `agent.orchestrator` or root in `opencode.jsonc` (provider-leaky; prefer plugin options)
-- Retries `session.prompt` with backoff
-
 ## Skills
 
 - **agent-delegation** - Decision table for routing work to the appropriate subagent
@@ -269,7 +254,6 @@ Key settings in `opencode.jsonc`:
 - **`permission`** - Provides a minimal deny-by-default workspace baseline; each agent declares its tool policy in `agents/<id>.md` frontmatter
 - **`agent.*.model`** - Configures model selection for primary agents and selected subagents
 - **`agent.*.variant`** - Per-agent thinking variant (e.g. `"max"`); **`temperature`** - Tune agent behavior where needed
-- **`plugin` tuple option `plan_post_approval_handoff_agent`** (for `./plugin-src/plan-post-approval.ts`) - Controls post-approval routing for the plan handoff plugin. Kept out of `agent.orchestrator` so strict providers (GLM, Vertex, Fireworks) don't reject it as an extra request field.
 
 CLI-only settings (theme, keybinds, diffs, session view, animations, and `attention` alerts) live in the separate `cli.json` and are not read from `opencode.jsonc`.
 

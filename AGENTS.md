@@ -27,7 +27,7 @@ You are operating as a coding agent for an experienced developer.
 
 ## Delegation
 
-Subagent ids below match markdown definitions in `~/.config/opencode/agents/<id>.md` (or `.opencode/agents/` per project). Invoke them with the **Task** tool when the primary agent is allowed to (see `permission.task` in those agents’ YAML frontmatter for `build` / `plan` / `orchestrator`), or with `@<id>` when appropriate. Do not replicate long read-only review, verification, or doc research in the primary thread when a subagent fits—delegate with a tight prompt instead.
+Subagent ids below match markdown definitions in `~/.config/opencode/agents/<id>.md` (or `.opencode/agents/` per project). Invoke them with the **Task** tool when the primary agent is allowed to (see the `subagent` rules under `permissions` in those agents’ YAML frontmatter for `build` / `plan` / `orchestrator`), or with `@<id>` when appropriate. Do not replicate long read-only review, verification, or doc research in the primary thread when a subagent fits—delegate with a tight prompt instead.
 
 **Agent role separation (strict):**
 
@@ -37,9 +37,9 @@ Subagent ids below match markdown definitions in `~/.config/opencode/agents/<id>
 
 **Typical order (adapt to the task):** `code-explorer` for reading and exploring codebase files, architecture mapping, and symbol location → `api-docs-researcher` when behavior depends on external APIs/docs → `code-executor` for implementation → `test-verifier`, plus `security-reviewer` when the change touches sensitive surfaces → `code-reviewer` on a stable diff → `docs-reviewer` when user-facing surface (CLI, config, setup, public API) changed. Use `spec-critic` early when the plan is fuzzy or cross-cutting. Use `host-security-investigator` for read-only hosting and service posture (network, TLS, IaC in-repo, containers); it complements `security-reviewer`, which targets application code and diffs.
 
-When the default agent is **`orchestrator`**, the usual pipeline is **`plan-runner`** (Task) for plan files under `.opencode/plans/`, **`question` / PlanApprove** in this session by the orchestrator, then **`code-executor`** (Task per slice), then **`code-reviewer`** and **`docs-reviewer`** (still via Task from the orchestrator). The standalone **`plan`** and **`build`** agents are unchanged — use **`build`** for direct coding or Tab to **`plan`** for the classic Plan workflow without Tasks.
+When the default agent is **`orchestrator`**, the usual pipeline is **`plan-runner`** (Task) for plan files under `.opencode/plans/`, **`question` / PlanApprove** in this session by the orchestrator, then **`code-executor`** (Task per slice), then **`code-reviewer`** and **`docs-reviewer`** (still via Task from the orchestrator). The standalone **`plan`** and **`build`** agents are unchanged — use **`build`** for direct coding or Tab to **`plan`** for the classic Plan workflow without Tasks. Plan approval is not automated; the orchestrator continues Phase B itself.
 
-For `orchestrator`, delegation is a permission boundary, not just a workflow preference. It must not use native `read`, `glob`, `grep`, `list`, `lsp`, or `bash` tools for repo discovery. If it lacks repo context, it delegates to `code-explorer`; if delegation is unnecessary overhead for a trivial direct edit, switch to `build` rather than inspecting locally.
+For `orchestrator`, delegation is a permission boundary, not just a workflow preference. It must not use native `read`, `glob`, `grep`, or shell tools for repo discovery. If it lacks repo context, it delegates to `code-explorer`; if delegation is unnecessary overhead for a trivial direct edit, switch to `build` rather than inspecting locally.
 
 **Inline (no Task):** trivial one-file edits, single obvious tool calls, or when the user explicitly wants everything in one thread. This exception does not let `orchestrator` inspect or edit repo files directly; use `build` for direct coding.
 

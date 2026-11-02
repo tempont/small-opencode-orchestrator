@@ -1,11 +1,5 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    [
-      "./plugin-src/plan-post-approval.ts",
-      { "plan_post_approval_handoff_agent": "orchestrator" },
-    ],
-  ],
 
   "provider": {},
 
